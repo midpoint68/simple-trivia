@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+    <title>Simple Trivia</title>
+    <meta charset="utf-8">
+    <style>
+
+    </style>
+</head>
+
+<body>
+    <h1>Simple Trivia</h1>
+    <h3>Click a category to get a random question!</h3>
+    <hr>
+    <button id="science">Science and Nature</button>
+    <button id="film">Entertainment: Film</button>
+    <button id="history">History</button>
+    <button id="geography">Geography</button>
+    <button id="sports">Sports</button>
+    <button id="random">Random</button>
+    <hr>
+    <table>
+        <tr>
+            <th>Category</th>
+            <td id="category"></td>
+        </tr>
+        <tr>
+            <th>Difficulty</th>
+            <td id="difficulty"></td>
+        </tr>
+        <tr>
+            <th>Question</th>
+            <td id="question"></td>
+        </tr>
+    </table>
+    <ol id="answers">
+
+    </ol>
+    <button id="show_correct">Show Correct Answer</button>
+
+    <script>
+        window.addEventListener('load', () => {
+            const science = document.getElementById("science");
+            const film = document.getElementById("film");
+            const history = document.getElementById("history");
+            const geography = document.getElementById("geography");
+            const sports = document.getElementById("sports");
+            const random = document.getElementById("random");
+
+            const question = document.getElementById("question");
+            const answers = document.getElementById("answers");
+            const category = document.getElementById("category");
+            const difficulty = document.getElementById("difficulty");
+            const show_correct = document.getElementById("show_correct");
+
+            const getq = (url) => {
+                const req = new XMLHttpRequest();
+                req.open('GET', url);
+                req.responseType = 'text/json';
+                req.onload = () => {
+                    const data = JSON.parse(req.response);
+                    console.log(data);
+                    const q = data.results[0];
+                    question.innerHTML = q.question;
+                    category.innerHTML = q.category;
+                    difficulty.innerHTML = q.difficulty;
+                    const a = [];
+                    a.push({ text: q.correct_answer, correct: true });
+                    for (let i = 0; i < q.incorrect_answers.length; i++) {
+                        a.push({ text: q.incorrect_answers[i], correct: false });
+                    }
+                    for (let n = 0; n < 3; n++) {
+                        for (let i = 0; i < a.length; i++) {
+                            const rand = Math.floor(Math.random() * a.length);
+                            const temp = a[rand];
+                            a[rand] = a[i];
+                            a[i] = temp;
+                        }
+                    }
+
+                    answers.innerHTML = "";
+                    for (let i = 0; i < a.length; i++) {
+                        answers.innerHTML += `<li${a[i].correct ? " id='correct'" : ""}>${a[i].text}</li>`;
+                    }
+                }
+                req.send();
+            }
+
+            show_correct.onclick = () => {
+                document.getElementById("correct").style = "color: lime; font-weight: bold; text-decoration: underline;";
+            };
+
+            science.onclick = () => {
+                getq("https://opentdb.com/api.php?amount=1&type=multiple&category=17");
+            }
+
+            history.onclick = () => {
+                getq("https://opentdb.com/api.php?amount=1&type=multiple&category=23");
+            }
+
+            geography.onclick = () => {
+                getq("https://opentdb.com/api.php?amount=1&type=multiple&category=22");
+            }
+
+            sports.onclick = () => {
+                getq("https://opentdb.com/api.php?amount=1&type=multiple&category=21");
+            }
+
+            film.onclick = () => {
+                getq("https://opentdb.com/api.php?amount=1&type=multiple&category=11");
+            }
+
+            random.onclick = () => {
+                getq("https://opentdb.com/api.php?amount=1&type=multiple");
+            }
+        });
+    </script>
+</body>
+
+</html>
