@@ -5,8 +5,33 @@
 <head>
     <title>Simple Trivia</title>
     <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
+        button {
+            padding: 0.5em;
+            margin: 0.5em;
+        }
 
+        tr {
+            text-align: left;
+        }
+
+        th,
+        td {
+            padding: 0.5em;
+        }
+
+        @media only screen and (max-aspect-ratio: 1/1) {
+
+            th,
+            td {
+                display: block;
+            }
+
+            td {
+                border-bottom: 1px solid #888;
+            }
+        }
     </style>
 </head>
 
